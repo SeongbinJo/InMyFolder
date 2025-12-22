@@ -1,0 +1,39 @@
+.google_container {
+    background-color: #FCF6FF;
+    height: 100px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border-radius: 10px;
+    box-shadow: 4px 4px 30px #8029B2;
+    padding: 10px 10px 5px 10px;
+}
+
+.close_button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #666;
+}
+
+.close_button:hover {
+  color: #000;
+}
+
+.google_container img {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    vertical-align: middle;
+}
+
+.google_container p {
+    margin: 0;
+    color: #8029B2;
+    font-weight: 500;
+}
