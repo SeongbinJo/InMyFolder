@@ -24,12 +24,17 @@ export default function Home() {
         return () => unsubscribe()
     }, [setCurrentUser])
 
+    useEffect(() => {
+        if (currentUser) {
+            navigate('/mypage')
+        }
+    }, [currentUser, navigate])
+
+
     const handleStart = () => {
         if (currentUser) {
-            console.log('드디어?')
             navigate('/mypage')
         } else {
-            console.log('제발 좀;')
             setShowLogin(true)
         }
     }

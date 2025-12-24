@@ -3,6 +3,7 @@ import { userState } from "../../state/userState"
 import { auth, googleProvider } from "../../firebase/firebaseConfig"
 import './GoogleLogin.css'
 import { X } from 'lucide-react'
+import { addUserData } from "../../firebase/firebaseManager"
 
 const googleLogo = './google-logo.png'
 
@@ -19,6 +20,7 @@ export default function GoogleLogin({ onClose }: GoogleLoginProps) {
             const user = signInResult.user
             const isNewUser = getAdditionalUserInfo(signInResult)?.isNewUser
 
+            addUserData(user)
             setCurrentUser(user)
             onClose()
         } catch (error) {
