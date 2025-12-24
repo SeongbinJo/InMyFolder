@@ -2,7 +2,7 @@ import type { User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
 
-type UserInfo = {
+export type UserInfo = {
     uid: string;
     email: string | null;
     displayName: string | null;

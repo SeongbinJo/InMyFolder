@@ -42,22 +42,22 @@ export default function Home() {
     return (
         <div className="background">
             <div className={`home_content ${showLogin ? 'blurred' : ''}`}>
-                <div className='left_side'>
-                    <div className='title'>
+                <div className="left_side">
+                    <div className="title">
                         <h1>In</h1>
                         <h1>My</h1>
                         <h1>Folder</h1>
                     </div>
 
-                    <div className='subtitle'>
+                    <div className="subtitle">
                         <p>
-                            <span className='italic bold'>In My Folder, </span>
+                            <span className="italic bold">In My Folder, </span>
                             인마뽀
-                            <span className='italic'>!</span>
+                            <span className="italic">!</span>
                         </p>
                         <p>
                             나만의 폴더형 포트폴리오를 만들어보세요
-                            <span className='italic'>!</span>
+                            <span className="italic">!</span>
                         </p>
 
                         <button onClick={handleStart}>
@@ -67,15 +67,15 @@ export default function Home() {
 
 
                 </div>
-                <div className='right_side'>
-                    <img src={mainImageUrl} alt='main_image' />
+                <div className="right_side">
+                    <img src={mainImageUrl} alt="main_image" />
                 </div>
 
-                <button className='info_button'>
+                <button className="info_button">
                     Info
                 </button>
 
-                <p className='info_p'>
+                <p className="info_p">
                     Created by Seongbin Jo
                 </p>
             </div>
