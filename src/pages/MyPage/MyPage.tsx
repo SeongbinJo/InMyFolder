@@ -1,11 +1,10 @@
 import { useEffect, useState } from "react"
 import { fetchUserData } from "../../firebase/firebaseManager"
 import { userState } from "../../state/userState"
-import type { UserInfo } from "../../firebase/firebaseManager"
 import { auth } from "../../firebase/firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth"
 import "./MyPage.css"
-import { Settings, LogOut, BookX } from "lucide-react"
+import { Settings, LogOut } from "lucide-react"
 
 const defatulProfileImg = './default_profile.png'
 
@@ -73,7 +72,6 @@ export default function MyPage({ }) {
                             설정
                         </button>
                         <button><LogOut style={lucideStyle} />로그아웃</button>
-                        <button><BookX style={lucideStyle} />회원탈퇴</button>
                     </div>
                 </div>
             </div>

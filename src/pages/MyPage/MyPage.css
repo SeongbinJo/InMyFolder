@@ -24,8 +24,8 @@
 
 .line {
   width: 100%;
-  height: 1px;
-  background-color: #ccc;
+  height: 2px;
+  background-color: #cccccc4d;
   margin: 10px 0 10px 0;
 }
 
@@ -63,7 +63,14 @@
 
 .button_group {
     width: 100%;
+    display: flex;
+    flex-direction: column;
 }
+
+.button_group.bottom {
+    gap: 10px;
+}
+
 
 .main_content {
     
