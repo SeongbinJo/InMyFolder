@@ -1,0 +1,30 @@
+.portfolio_list {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 5px;
+}
+
+.folder {
+    border-width: 0;
+    border-radius: 10px;
+    background-color: transparent;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+    width: 130px;
+    cursor: pointer;
+    padding-top: 5px;
+    margin: 5px 10px 0 10px;
+}
+
+.create_button {
+    width: 120px;
+    height: 80px;
+    border: 2px dashed #BA9E59;
+    border-radius: 10px;
+    background-color: #f7d37771;
+    cursor: pointer;
+    margin: 0 10px 5px 10px;
+}

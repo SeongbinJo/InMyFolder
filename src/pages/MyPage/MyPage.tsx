@@ -30,22 +30,22 @@ export default function MyPage({ }) {
         return () => unsubscribe()
     }, [setCurrentUser])
 
-    useEffect(() => {
-        // 페이지 로드 시 실행
-        const fetchData = async () => {
-            if (currentUser) {
-                const data = await fetchUserData(currentUser.uid)
-                console.log(`데이터 불러오기 성공: `, currentUser.displayName)
-            }
-        }
+    // useEffect(() => {
+    //     // 페이지 로드 시 실행
+    //     const fetchData = async () => {
+    //         if (currentUser) {
+    //             const data = await fetchUserData(currentUser.uid)
+    //             console.log(`데이터 불러오기 성공: `, currentUser.displayName)
+    //         }
+    //     }
 
-        fetchData()
-    }, [])
+    //     fetchData()
+    // }, [])
 
     const renderContent = () => {
         switch (activeMenu) {
             case 'portfolio':
-                return <MyPortfolio />
+                return <MyPortfolio uid={currentUser?.uid ?? ''} />
             case 'trash':
                 return <Trash />
             case 'settings':

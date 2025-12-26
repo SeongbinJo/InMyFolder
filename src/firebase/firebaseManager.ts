@@ -7,7 +7,14 @@ export type UserInfo = {
     email: string | null;
     displayName: string | null;
     createdAt: Date;
-    portfolio: [name: string, createdAt: Date, Photos[], Texts[]][];
+    portfolio: Portfolio[];
+}
+
+export type Portfolio = {
+    name: string;
+    createdAt: Date;
+    photos: Photos[];
+    texts: Texts[]; 
 }
 
 type Photos = {
