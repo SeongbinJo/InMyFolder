@@ -70,3 +70,20 @@ export async function fetchUserData(uid: string) {
         return null
     }
 }
+
+// 현재 유저의 포트폴리오 배열 불러오기
+export async function fetchPortfolioData(uid: string) {
+    try {
+        const docRef = doc(db, "users", uid)
+        const snap = await getDoc(docRef)
+        if (!snap.exists()) {
+            console.log("해당 유저의 문서가 존재하지 않습니다.")
+            return null
+        }
+        const data = snap.data()
+        return data.portfolio
+    } catch (error) {
+        console.error("Error fetching portfolio data: ", error);
+        return null
+    }
+}

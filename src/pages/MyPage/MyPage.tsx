@@ -5,6 +5,9 @@ import { auth } from "../../firebase/firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth"
 import "./MyPage.css"
 import { Settings, LogOut } from "lucide-react"
+import MyPortfolio from "./Myportfolio"
+import Trash from "./Trash"
+import Setting from "./Setting"
 
 const defatulProfileImg = './default_profile.png'
 
@@ -39,8 +42,21 @@ export default function MyPage({ }) {
         fetchData()
     }, [])
 
+    const renderContent = () => {
+        switch (activeMenu) {
+            case 'portfolio':
+                return <MyPortfolio />
+            case 'trash':
+                return <Trash />
+            case 'settings':
+                return <Setting />
+            default:
+                return null
+        }
+    }
+
     return (
-        <div>
+        <div className="mypage">
             <div className="left_sidebar">
                 <div className="profile">
                     <img src={defatulProfileImg} alt="default_profile" />
@@ -77,7 +93,7 @@ export default function MyPage({ }) {
             </div>
 
             <div className="main_content">
-
+                {renderContent()}
             </div>
         </div>
     )
