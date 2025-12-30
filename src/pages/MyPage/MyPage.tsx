@@ -93,7 +93,15 @@ export default function MyPage({ }) {
             </div>
 
             <div className="main_content">
-                {renderContent()}
+
+                {activeMenu === 'portfolio' && !currentUser && (
+                    <p>로그인 정보를 불러오는 중...</p>
+                )}
+
+                {activeMenu === 'portfolio' && currentUser && (
+                    <MyPortfolio uid={currentUser.uid} />
+                )}
+
             </div>
         </div>
     )

@@ -13,11 +13,23 @@ type MyPortfolioProps = {
     uid: string
 }
 
+type contextMenuState = {
+    visible: boolean,
+    x: number,
+    y: number,
+}
+
 const folderImgUrl = './folder.png'
 
 export default function MyPortfolio({ uid }: MyPortfolioProps) {
 
     const [portfolioData, setPortfolioData] = useState<Portfolio[]>([])
+
+    const [menu, setMenu] = useState<contextMenuState>({
+        visible: false,
+        x: 0,
+        y: 0,
+    })
 
     useEffect(() => {
         // 포트폴리오 데이터 불러오기
@@ -29,11 +41,51 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
         fetchPortfolio()
     }, [uid])
 
+    // 우클릭 메뉴 핸들러
+    const handleContextMenu = (event: React.MouseEvent) => {
+        event.preventDefault()
+
+        const rect = event.currentTarget.getBoundingClientRect()
+
+        setMenu({
+            visible: true,
+            x: event.clientX + 10,
+            y: event.clientY,
+        })
+    }
+
+    // 바깥 클릭/스크롤 시 메뉴 닫기
+    useEffect(() => {
+        if (!menu.visible) return
+
+        const hide = () => setMenu({ ...menu, visible: false })
+
+        window.addEventListener('click', hide)
+        window.addEventListener('scroll', hide)
+
+        return () => {
+            window.removeEventListener('click', hide)
+            window.removeEventListener('scroll', hide)
+        }
+    }, [menu])
+
+    // 우클릭 메뉴 기능 핸들러
+    const handleMenuClick = (action: string) => {
+        console.log(`메뉴 액션: ${action}`)
+        setMenu({ ...menu, visible: false })
+        // TODO: 액션에 따른 기능 구현
+    }
+
     return (
-        <div className="portfolio_list">
+        <div
+            className="portfolio_list">
             <div className="portfolio_grid">
                 {portfolioData.map((portfolio, index) => (
-                    <button className="folder" key={index}>
+                    <button
+                        className="folder"
+                        key={index}
+                        onContextMenu={handleContextMenu}
+                    >
                         <img src={folderImgUrl} alt="folder" />
                         <span className="portfolio_title">{portfolio.name}</span>
                     </button>
@@ -42,6 +94,18 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
                     color: '#BA9E59'
                 }} /></button>
             </div>
+
+            {menu.visible && (
+                <div
+                    className="portfolio_context_menu"
+                    style={{ top: menu.y, left: menu.x }}
+                    onClick={(e) => e.stopPropagation()}  // 메뉴 클릭 시 바깥 클릭 이벤트 막기
+                >
+                    <button onClick={() => handleMenuClick("new")}>열기</button>
+                    <button onClick={() => handleMenuClick("new")}>이름 변경</button>
+                    <button onClick={() => handleMenuClick("refresh")}>휴지통으로 이동</button>
+                </div>
+            )}
         </div>
     )
 }
