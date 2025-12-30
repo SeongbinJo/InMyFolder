@@ -1,6 +1,7 @@
 .mypage {
     display: flex;
     flex-direction: row;
+    height: 100vh;
 }
 
 .left_sidebar {
@@ -10,7 +11,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-}   
+}
 
 .left_sidebar img {
     width: 40px;
@@ -28,10 +29,10 @@
 }
 
 .line {
-  width: 100%;
-  height: 2px;
-  background-color: #cccccc4d;
-  margin: 10px 0 10px 0;
+    width: 100%;
+    height: 2px;
+    background-color: #cccccc4d;
+    margin: 10px 0 10px 0;
 }
 
 .button_panel {
@@ -61,9 +62,9 @@
 }
 
 .button_panel button.active {
-  font-weight: bold;
-  background-color: rgba(255, 255, 255, 0.15);
-  border-radius: 6px;
+    font-weight: bold;
+    background-color: rgba(255, 255, 255, 0.15);
+    border-radius: 6px;
 }
 
 .button_group {
@@ -78,5 +79,6 @@
 
 
 .main_content {
-    
+    flex: 1;
+    overflow-y: auto;
 }

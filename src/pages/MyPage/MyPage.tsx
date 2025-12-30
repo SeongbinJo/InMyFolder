@@ -5,7 +5,7 @@ import { auth } from "../../firebase/firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth"
 import "./MyPage.css"
 import { Settings, LogOut } from "lucide-react"
-import MyPortfolio from "./Myportfolio"
+import MyPortfolio from "./MyPortfolio"
 import Trash from "./Trash"
 import Setting from "./Setting"
 

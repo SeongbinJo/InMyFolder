@@ -23,7 +23,7 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
         // 포트폴리오 데이터 불러오기
         const fetchPortfolio = async () => {
             const data = await fetchPortfolioData(uid)
-            if (data) setPortfolioData(data)      
+            if (data) setPortfolioData(data)
         }
 
         fetchPortfolio()
@@ -31,15 +31,17 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
 
     return (
         <div className="portfolio_list">
-            {portfolioData.map((portfolio, index) => (
-                <button className="folder" key={index}>
-                    <img src={folderImgUrl} alt="folder" />
-                    <span>{portfolio.name}</span>
-                </button>
-            ))}
-            <button className="create_button"><Plus style={{
-                color: '#BA9E59'
-            }} /></button>
+            <div className="portfolio_grid">
+                {portfolioData.map((portfolio, index) => (
+                    <button className="folder" key={index}>
+                        <img src={folderImgUrl} alt="folder" />
+                        <span className="portfolio_title">{portfolio.name}</span>
+                    </button>
+                ))}
+                <button className="create_button"><Plus style={{
+                    color: '#BA9E59'
+                }} /></button>
+            </div>
         </div>
     )
 }
