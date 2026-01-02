@@ -4,8 +4,8 @@
 // 4. 포트폴리오 추가 버튼 클릭 시 모달창 오픈 -> 포트폴리오 정보 입력 -> 
 // 저장 시 포트폴리오 데이터 업데이트 및 다시 불러오기 -> 포트폴리오 목록 갱신 -> 편집창으로 이동
 
-import { useEffect, useState } from "react"
-import { fetchPortfolioData, type Portfolio } from "../../firebase/firebaseManager"
+import { useEffect, useRef, useState } from "react"
+import { fetchPortfolioData, renamePortfolio, type Portfolio } from "../../firebase/firebaseManager"
 import "./MyPortfolio.css"
 import { Plus } from "lucide-react"
 
@@ -35,6 +35,19 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
         target: null,
     })
 
+    // 이름 변경 중인 포트폴리오 인덱스/이름
+    const [editingIndex, setEditingIndex] = useState<number | null>(null)
+    const [editingName, setEditingName] = useState<string>("")
+    const inputRef = useRef<HTMLInputElement | null>(null)
+
+    // 이름 변경시 input 전체 선택
+    useEffect(() => {
+        if (editingIndex !== null && inputRef.current) {
+            inputRef.current.focus()
+            inputRef.current.select()
+        }
+    }, [editingIndex])
+
     useEffect(() => {
         // 포트폴리오 데이터 불러오기
         const fetchPortfolio = async () => {
@@ -43,7 +56,7 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
         }
 
         fetchPortfolio()
-    }, [uid])
+    }, [])
 
     // 우클릭 메뉴 핸들러
     const handleContextMenu = (
@@ -52,7 +65,7 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
         index: number
     ) => {
         event.preventDefault()
-        
+
         setMenu({
             visible: true,
             x: event.clientX + 10,
@@ -77,8 +90,40 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
         }
     }, [menu])
 
+    // 이름 변경 commit
+    const commitRename = async () => {
+        if (editingIndex === null || editingName.trim() === "") return
+
+        const success = await renamePortfolio(uid, editingIndex, editingName)
+        if (success) {
+            // 포트폴리오 데이터 갱신
+            const data = await fetchPortfolioData(uid)
+            if (data) {
+                setPortfolioData(data)
+                console.log('포트폴리오 이름 변경 후 바로 데이터 갱신 성공')
+            } else {
+                console.log('포트폴리오 이름 변경 후 데이터 갱신 실패')
+            }
+        }
+
+        setEditingIndex(null)
+        setEditingName("")
+    }
+
     // 우클릭 메뉴 기능 핸들러
     const handleMenuClick = (action: string) => {
+        if (action === "rename" && menu.targetIndex !== null && menu.target) {
+            setEditingIndex(menu.targetIndex)
+            setEditingName(menu.target.name)
+        }
+
+        if (action === "open" && menu.targetIndex !== null) {
+            console.log(`포트폴리오 열기: ${portfolioData[menu.targetIndex].name}`)
+        }
+
+        if (action === "delete" && menu.targetIndex !== null) {
+            console.log(`포트폴리오 휴지통으로 이동: ${portfolioData[menu.targetIndex].name}`)
+        }
         console.log(`메뉴 액션: ${action}`)
         setMenu({ ...menu, visible: false })
         // TODO: 액션에 따른 기능 구현
@@ -95,7 +140,21 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
                         onContextMenu={(event) => handleContextMenu(event, portfolio, index)}
                     >
                         <img src={folderImgUrl} alt="folder" />
-                        <span className="portfolio_title">{portfolio.name}</span>
+                        {editingIndex === index ? (
+                            <input
+                                ref={inputRef}
+                                className="porfolio_title_input"
+                                value={editingName}
+                                onChange={(e) => setEditingName(e.target.value)}
+                                onBlur={commitRename}
+                                onKeyDown={(e) => {
+                                    if (e.key === 'Enter') commitRename()
+                                    if (e.key === 'Escape') setEditingIndex(null)
+                                }}
+                            />
+                        ) : (
+                            <span className="portfolio_title">{portfolio.name}</span>
+                        )}
                     </button>
                 ))}
                 <button className="create_button"><Plus style={{
@@ -109,9 +168,9 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
                     style={{ top: menu.y, left: menu.x }}
                     onClick={(e) => e.stopPropagation()}  // 메뉴 클릭 시 바깥 클릭 이벤트 막기
                 >
-                    <button onClick={() => handleMenuClick("new")}>열기</button>
-                    <button onClick={() => handleMenuClick("new")}>이름 변경</button>
-                    <button onClick={() => handleMenuClick("refresh")}>휴지통으로 이동</button>
+                    <button onClick={() => handleMenuClick("open")}>열기</button>
+                    <button onClick={() => handleMenuClick("rename")}>이름 변경</button>
+                    <button onClick={() => handleMenuClick("delete")}>휴지통으로 이동</button>
                 </div>
             )}
         </div>
