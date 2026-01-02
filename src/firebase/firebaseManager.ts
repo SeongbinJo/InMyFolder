@@ -97,3 +97,23 @@ export async function fetchPortfolioData(uid: string) {
         return null
     }
 }
+
+// 우클릭된 포트폴리오 이름 변경하기
+export async function renamePortfolio(uid: string, index: number, newName: string) {
+    try {
+        const docRef = doc(db, "users", uid)
+        const snap = await getDoc(docRef)
+        if (!snap.exists()) {
+            console.log("해당 유저의 문서가 존재하지 않습니다.")
+            return false
+        }
+        const data = snap.data()
+        const portfolioArray: Portfolio[] = data.portfolio
+        portfolioArray[index].name = newName
+        await setDoc(docRef, { portfolio: portfolioArray }, { merge: true })
+        return true
+    } catch (error) {
+        console.error("Error renaming portfolio: ", error);
+        return false
+    }
+}
