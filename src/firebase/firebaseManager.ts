@@ -8,6 +8,7 @@ export type UserInfo = {
     displayName: string | null;
     createdAt: Date;
     portfolio: Portfolio[];
+    trash: Portfolio[];
 }
 
 export type Portfolio = {
@@ -40,7 +41,8 @@ export async function addUserData(userInfo: User) {
         email: userInfo.email,
         displayName: userInfo.displayName,
         createdAt: new Date(),
-        portfolio: []
+        portfolio: [],
+        trash: [],
     }
 
     try {
@@ -68,7 +70,8 @@ export async function fetchUserData(uid: string) {
             email: data.email,
             displayName: data.displayName,
             createdAt: data.createdAt.toDate(),
-            portfolio: data.portfolio
+            portfolio: data.portfolio,
+            trash: data.trash,
         }
 
         return userData

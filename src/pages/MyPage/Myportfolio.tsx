@@ -17,6 +17,8 @@ type contextMenuState = {
     visible: boolean,
     x: number,
     y: number,
+    targetIndex: number | null,
+    target: Portfolio | null,
 }
 
 const folderImgUrl = './folder.png'
@@ -29,6 +31,8 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
         visible: false,
         x: 0,
         y: 0,
+        targetIndex: null,
+        target: null,
     })
 
     useEffect(() => {
@@ -42,15 +46,19 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
     }, [uid])
 
     // 우클릭 메뉴 핸들러
-    const handleContextMenu = (event: React.MouseEvent) => {
+    const handleContextMenu = (
+        event: React.MouseEvent,
+        portfolio: Portfolio,
+        index: number
+    ) => {
         event.preventDefault()
-
-        const rect = event.currentTarget.getBoundingClientRect()
-
+        
         setMenu({
             visible: true,
             x: event.clientX + 10,
             y: event.clientY,
+            targetIndex: index,
+            target: portfolio,
         })
     }
 
@@ -84,7 +92,7 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
                     <button
                         className="folder"
                         key={index}
-                        onContextMenu={handleContextMenu}
+                        onContextMenu={(event) => handleContextMenu(event, portfolio, index)}
                     >
                         <img src={folderImgUrl} alt="folder" />
                         <span className="portfolio_title">{portfolio.name}</span>
