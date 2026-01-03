@@ -8,14 +8,15 @@ export type UserInfo = {
     displayName: string | null;
     createdAt: Date;
     portfolio: Portfolio[];
-    trash: Portfolio[];
 }
 
 export type Portfolio = {
+    id: string;
     name: string;
     createdAt: Date;
     photos: Photos[];
-    texts: Texts[]; 
+    texts: Texts[];
+    isDeleted: boolean;
 }
 
 type Photos = {
@@ -42,7 +43,6 @@ export async function addUserData(userInfo: User) {
         displayName: userInfo.displayName,
         createdAt: new Date(),
         portfolio: [],
-        trash: [],
     }
 
     try {
@@ -71,7 +71,6 @@ export async function fetchUserData(uid: string) {
             displayName: data.displayName,
             createdAt: data.createdAt.toDate(),
             portfolio: data.portfolio,
-            trash: data.trash,
         }
 
         return userData
@@ -114,6 +113,56 @@ export async function renamePortfolio(uid: string, index: number, newName: strin
         return true
     } catch (error) {
         console.error("Error renaming portfolio: ", error);
+        return false
+    }
+}
+
+// 포트폴리오 휴지통 이동 (isDeleted = true)
+export async function movePortfolioToTrash(uid: string, index: number) {
+    try {
+        const docRef = doc(db, "users", uid)
+        const snap = await getDoc(docRef)
+
+        if (!snap.exists()) {
+            console.log("해당 유저의 문서가 존재하지 않습니다.")
+            return false
+        }
+
+        const data = snap.data()
+        const portfolioArray: Portfolio[] = data.portfolio
+
+        if (!portfolioArray[index]) return false
+
+        portfolioArray[index].isDeleted = true
+        await setDoc(docRef, { portfolio: portfolioArray }, { merge: true })
+        return true
+    } catch (error) {
+        console.error("Error moving portfolio to trash: ", error);
+        return false
+    }
+}
+
+// 포트폴리오 휴지통에서 복구 (isDeleted = false)
+export async function restorePortfolioFromTrash(uid: string, index: number) {
+    try {
+        const docRef = doc(db, "users", uid)
+        const snap = await getDoc(docRef)
+
+        if (!snap.exists()) {
+            console.log("해당 유저의 문서가 존재하지 않습니다.")
+            return false
+        }
+
+        const data = snap.data()
+        const portfolioArray: Portfolio[] = data.portfolio
+
+        if (!portfolioArray[index]) return false
+
+        portfolioArray[index].isDeleted = false
+        await setDoc(docRef, { portfolio: portfolioArray }, { merge: true })
+        return true
+    } catch (error) {
+        console.error("Error restoring portfolio from trash: ", error);
         return false
     }
 }

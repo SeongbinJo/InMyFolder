@@ -5,12 +5,15 @@
 // 저장 시 포트폴리오 데이터 업데이트 및 다시 불러오기 -> 포트폴리오 목록 갱신 -> 편집창으로 이동
 
 import { useEffect, useRef, useState } from "react"
-import { fetchPortfolioData, renamePortfolio, type Portfolio } from "../../firebase/firebaseManager"
+import { type Portfolio } from "../../firebase/firebaseManager"
 import "./MyPortfolio.css"
 import { Plus } from "lucide-react"
 
 type MyPortfolioProps = {
     uid: string
+    portfolioData: Portfolio[]
+    onMoveToTrash: (id: string) => void
+    onRename: (index: number, newName: string) => void
 }
 
 type contextMenuState = {
@@ -23,9 +26,7 @@ type contextMenuState = {
 
 const folderImgUrl = './folder.png'
 
-export default function MyPortfolio({ uid }: MyPortfolioProps) {
-
-    const [portfolioData, setPortfolioData] = useState<Portfolio[]>([])
+export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: MyPortfolioProps) {
 
     const [menu, setMenu] = useState<contextMenuState>({
         visible: false,
@@ -47,16 +48,6 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
             inputRef.current.select()
         }
     }, [editingIndex])
-
-    useEffect(() => {
-        // 포트폴리오 데이터 불러오기
-        const fetchPortfolio = async () => {
-            const data = await fetchPortfolioData(uid)
-            if (data) setPortfolioData(data)
-        }
-
-        fetchPortfolio()
-    }, [])
 
     // 우클릭 메뉴 핸들러
     const handleContextMenu = (
@@ -94,35 +85,24 @@ export default function MyPortfolio({ uid }: MyPortfolioProps) {
     const commitRename = async () => {
         if (editingIndex === null || editingName.trim() === "") return
 
-        const success = await renamePortfolio(uid, editingIndex, editingName)
-        if (success) {
-            // 포트폴리오 데이터 갱신
-            const data = await fetchPortfolioData(uid)
-            if (data) {
-                setPortfolioData(data)
-                console.log('포트폴리오 이름 변경 후 바로 데이터 갱신 성공')
-            } else {
-                console.log('포트폴리오 이름 변경 후 데이터 갱신 실패')
-            }
-        }
-
+        onRename(editingIndex, editingName.trim())
         setEditingIndex(null)
         setEditingName("")
     }
 
     // 우클릭 메뉴 기능 핸들러
     const handleMenuClick = (action: string) => {
+        if (action === "open" && menu.targetIndex !== null) {
+            console.log(`포트폴리오 열기: ${portfolioData[menu.targetIndex].name}`)
+        }
+
         if (action === "rename" && menu.targetIndex !== null && menu.target) {
             setEditingIndex(menu.targetIndex)
             setEditingName(menu.target.name)
         }
 
-        if (action === "open" && menu.targetIndex !== null) {
-            console.log(`포트폴리오 열기: ${portfolioData[menu.targetIndex].name}`)
-        }
-
         if (action === "delete" && menu.targetIndex !== null) {
-            console.log(`포트폴리오 휴지통으로 이동: ${portfolioData[menu.targetIndex].name}`)
+            onMoveToTrash(portfolioData[menu.targetIndex].id)
         }
         console.log(`메뉴 액션: ${action}`)
         setMenu({ ...menu, visible: false })

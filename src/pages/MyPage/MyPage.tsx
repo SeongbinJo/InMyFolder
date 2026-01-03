@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { fetchUserData } from "../../firebase/firebaseManager"
+import { fetchPortfolioData, movePortfolioToTrash, renamePortfolio, restorePortfolioFromTrash, type Portfolio } from "../../firebase/firebaseManager"
 import { userState } from "../../state/userState"
 import { auth } from "../../firebase/firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth"
@@ -21,33 +21,86 @@ export default function MyPage({ }) {
 
     const [activeMenu, setActiveMenu] = useState<ActiveMenu>('portfolio')
 
-    // 로드 시 로그인확인
+    const [portfolioData, setPortfolioData] = useState<Portfolio[]>([])
+
+    // 첫 실행
     useEffect(() => {
+        // 로그인 확인
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user)
         })
 
+        // 포트폴리오 Data 불러오기
+        const loadPortfolioData = async () => {
+            if (!currentUser) return
+            const data = await fetchPortfolioData(currentUser.uid)
+            if (data) setPortfolioData(data)
+        }
+
+        loadPortfolioData()
+
         return () => unsubscribe()
-    }, [setCurrentUser])
+    }, [currentUser])
 
-    // useEffect(() => {
-    //     // 페이지 로드 시 실행
-    //     const fetchData = async () => {
-    //         if (currentUser) {
-    //             const data = await fetchUserData(currentUser.uid)
-    //             console.log(`데이터 불러오기 성공: `, currentUser.displayName)
-    //         }
-    //     }
+    // 이름 변경 핸들러
+    const handleRenamePortfolio = async (index: number, newName: string) => {
+        setPortfolioData(prev =>
+            prev.map((p, i) =>
+                i === index ? { ...p, name: newName } : p
+            )
+        )
 
-    //     fetchData()
-    // }, [])
+        if (!currentUser) return
+        await renamePortfolio(currentUser.uid, index, newName)
+    }
+
+    // 내 포트폴리오 및 휴지통 분리
+    const activePortfolios = portfolioData.filter(portfolio => !portfolio.isDeleted)
+    const deletedPortfolios = portfolioData.filter(portfolio => portfolio.isDeleted)
+
+    // 휴지통 이동
+    const handleMoveToTrash = async (id: string) => {
+        setPortfolioData(prev =>
+            prev.map(p => p.id === id ? { ...p, isDeleted: true } : p)
+        )
+
+        if (!currentUser) return
+        await movePortfolioToTrash(currentUser.uid, portfolioData.findIndex(p => p.id === id))
+    }
+
+    // 휴지통 복구
+    const handleRetoreFromTrash = async (id: string) => {
+        setPortfolioData(prev =>
+            prev.filter(p => p.id !== id)
+        )
+
+        if (!currentUser) return
+        await restorePortfolioFromTrash(currentUser.uid, portfolioData.findIndex(p => p.id === id))
+    }
+
+    // 휴지통 영구 삭제
+    const handleDeletePermanently = async (id: string) => {
+        setPortfolioData(prev =>
+            prev.filter(p => p.id !== id)
+        )
+    }
 
     const renderContent = () => {
         switch (activeMenu) {
             case 'portfolio':
-                return <MyPortfolio uid={currentUser?.uid ?? ''} />
+                return <MyPortfolio
+                    uid={currentUser?.uid ?? ''}
+                    portfolioData={activePortfolios}
+                    onMoveToTrash={handleMoveToTrash}
+                    onRename={handleRenamePortfolio}
+                />
             case 'trash':
-                return <Trash />
+                return <Trash
+                    // uid={currentUser?.uid ?? ''}
+                    // portfolioData={deletedPortfolios}
+                    // onRestoreFromTrash={handleRetoreFromTrash}
+                    // onDeletePermanently={handleDeletePermanently}
+                />
             case 'settings':
                 return <Setting />
             default:
@@ -93,15 +146,7 @@ export default function MyPage({ }) {
             </div>
 
             <div className="main_content">
-
-                {activeMenu === 'portfolio' && !currentUser && (
-                    <p>로그인 정보를 불러오는 중...</p>
-                )}
-
-                {activeMenu === 'portfolio' && currentUser && (
-                    <MyPortfolio uid={currentUser.uid} />
-                )}
-
+                {renderContent()}
             </div>
         </div>
     )
