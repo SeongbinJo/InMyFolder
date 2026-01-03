@@ -71,7 +71,7 @@ export default function MyPage({ }) {
     // 휴지통 복구
     const handleRetoreFromTrash = async (id: string) => {
         setPortfolioData(prev =>
-            prev.filter(p => p.id !== id)
+            prev.map(p => p.id === id ? { ...p, isDeleted: false } : p)
         )
 
         if (!currentUser) return
@@ -96,10 +96,9 @@ export default function MyPage({ }) {
                 />
             case 'trash':
                 return <Trash
-                    // uid={currentUser?.uid ?? ''}
-                    // portfolioData={deletedPortfolios}
-                    // onRestoreFromTrash={handleRetoreFromTrash}
-                    // onDeletePermanently={handleDeletePermanently}
+                    portfolioData={deletedPortfolios}
+                    onRestoreFromTrash={handleRetoreFromTrash}
+                    onDeletePermanently={handleDeletePermanently}
                 />
             case 'settings':
                 return <Setting />

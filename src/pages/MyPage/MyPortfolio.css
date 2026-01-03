@@ -50,7 +50,7 @@
 .portfolio_context_menu {
     position: absolute;
     z-index: 999;
-    background-color: #563E65;
+    background-color: #3f3148;
     border-radius: 8px;
     box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
     padding: 10px 0 10px 0;
@@ -74,7 +74,7 @@
 }
 
 .portfolio_context_menu button:hover {
-    background-color: #8534b4;
+    background-color: #6c2f94;
 }
 
 .porfolio_title_input {
