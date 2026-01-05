@@ -1,14 +1,27 @@
 .trash_list {
-    display: flex;
-    flex-direction: row;
-    padding: 15px;
+    top: 200px;
+}
+
+.empty_wrapper {
+    height: 90vh;
+    top: 200px;
+}
+
+.empty_message {
+    flex: 1;
+    position: absolute;
+    font-size: 14px;
+    color: #777777;
+    top: 50%;
+    left: 50%;
+    transform: translate(30%, 0%);
 }
 
 .trash_grid {
     display: flex;
     flex-wrap: wrap;
     gap: 20px;
-    align-items: center;
+    padding: 15px;
 }
 
 .trash_folder {
@@ -22,7 +35,8 @@
     cursor: pointer;
     padding-top: 5px;
     margin: 5px 10px 0 10px;
-    opacity: 0.7; /* 휴지통 느낌 살짝 흐리게 */
+    opacity: 0.7;
+    /* 휴지통 느낌 살짝 흐리게 */
 }
 
 .trash_folder img {

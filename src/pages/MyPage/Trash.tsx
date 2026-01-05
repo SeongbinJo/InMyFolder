@@ -81,20 +81,26 @@ export default function Trash({ portfolioData, onRestoreFromTrash, onDeletePerma
 
     return (
         <div className="trash_list">
-            <div className="trash_grid">
-                {portfolioData.map((portfolio) => (
-                    <button
-                        key={portfolio.id}
-                        className="trash_folder"
-                        onContextMenu={(event) =>
-                            handleContextMenu(event, portfolio)
-                        }
-                    >
-                        <img src={folderImgUrl} alt="folder" />
-                        <span className="trash_title">{portfolio.name}</span>
-                    </button>
-                ))}
-            </div>
+            {portfolioData.length === 0 ? (
+                <div className="empty_wrapper">
+                    <p className="empty_message">휴지통이 비어 있습니다.</p>
+                </div>
+            ) : (
+                <div className="trash_grid">
+                    {portfolioData.map((portfolio) => (
+                        <button
+                            key={portfolio.id}
+                            className="trash_folder"
+                            onContextMenu={(event) =>
+                                handleContextMenu(event, portfolio)
+                            }
+                        >
+                            <img src={folderImgUrl} alt="folder" />
+                            <span className="trash_title">{portfolio.name}</span>
+                        </button>
+                    ))}
+                </div>)
+            }
 
             {menu.visible && (
                 <div
