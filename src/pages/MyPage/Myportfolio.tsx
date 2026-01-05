@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react"
 import { type Portfolio } from "../../firebase/firebaseManager"
 import "./MyPortfolio.css"
 import { Plus } from "lucide-react"
+import AlertTrash from "./AlertTrash"
 
 type MyPortfolioProps = {
     uid: string
@@ -40,6 +41,9 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
     const [editingIndex, setEditingIndex] = useState<number | null>(null)
     const [editingName, setEditingName] = useState<string>("")
     const inputRef = useRef<HTMLInputElement | null>(null)
+
+    // 휴지통 이동 Alert
+    const [showTrashAlert, setShowTrashAlert] = useState(false)
 
     // 이름 변경시 input 전체 선택
     useEffect(() => {
@@ -102,7 +106,8 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
         }
 
         if (action === "delete" && menu.targetIndex !== null) {
-            onMoveToTrash(portfolioData[menu.targetIndex].id)
+            setShowTrashAlert(true)
+            // onMoveToTrash(portfolioData[menu.targetIndex].id)
         }
         console.log(`메뉴 액션: ${action}`)
         setMenu({ ...menu, visible: false })
@@ -141,6 +146,19 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
                     color: '#BA9E59'
                 }} /></button>
             </div>
+
+            <AlertTrash
+                isOpen={showTrashAlert}
+                onClose={() => setShowTrashAlert(false)}
+                onConfirm={() => {
+                    if (menu.target) {
+                        onMoveToTrash(menu.target.id)
+                    }
+                    setShowTrashAlert(false)
+                }}
+                title={`휴지통으로 이동`}
+                description={`'${portfolioData[menu.targetIndex].name}' 을(를) 휴지통으로 이동하시겠습니까?`}
+            />
 
             {menu.visible && (
                 <div

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { type Portfolio } from "../../firebase/firebaseManager"
 import "./Trash.css"
+import AlertTrash from "./AlertTrash"
 
 type TrashProps = {
     portfolioData: Portfolio[]
@@ -24,6 +25,10 @@ export default function Trash({ portfolioData, onRestoreFromTrash, onDeletePerma
         y: 0,
         target: null,
     })
+
+    const [showAlert, setShowAlert] = useState(false)
+    const [alertMode, setAlertMode] = useState<"restore" | "delete" | null>(null)
+    const [alertTarget, setAlertTarget] = useState<Portfolio | null>(null)
 
     // 우클릭 메뉴 핸들러
     const handleContextMenu = (
@@ -65,11 +70,15 @@ export default function Trash({ portfolioData, onRestoreFromTrash, onDeletePerma
         if (!menu.target) return
 
         if (action === "restore") {
-            onRestoreFromTrash(menu.target.id)
+            setAlertMode("restore")
+            setAlertTarget(menu.target)
+            setShowAlert(true)
         }
 
         if (action === "delete") {
-            onDeletePermanently(menu.target.id)
+            setAlertMode("delete")
+            setAlertTarget(menu.target)
+            setShowAlert(true)
         }
 
         setMenu((prev) => ({
@@ -77,6 +86,21 @@ export default function Trash({ portfolioData, onRestoreFromTrash, onDeletePerma
             visible: false,
             target: null,
         }))
+    }
+
+    const handleAlertConfirm = () => {
+        if (!alertTarget) return
+
+        if (alertMode === "restore") {
+            onRestoreFromTrash(alertTarget.id)
+            console.log('복구복구')
+        } else if (alertMode === "delete") {
+            onDeletePermanently(alertTarget.id)
+        }
+
+        setShowAlert(false)
+        setAlertMode(null)
+        setAlertTarget(null)
     }
 
     return (
@@ -116,6 +140,21 @@ export default function Trash({ portfolioData, onRestoreFromTrash, onDeletePerma
                     </button>
                 </div>
             )}
+
+            <AlertTrash
+                isOpen={showAlert}
+                onClose={() => {
+                    setShowAlert(false)
+                    setAlertMode(null)
+                }}
+                onConfirm={handleAlertConfirm}
+                title={alertMode === "restore" ? "복구" : "영구 삭제"}
+                description={
+                    alertMode === "restore" ?
+                        `'${alertTarget?.name}' 을(를) 복구하시겠습니까?` :
+                        `'${alertTarget?.name}' 을(를) 영구 삭제하시겠습니까?`
+                }
+            />
         </div>
     )
 }
