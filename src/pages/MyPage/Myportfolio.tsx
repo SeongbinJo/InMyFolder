@@ -5,14 +5,16 @@
 // 저장 시 포트폴리오 데이터 업데이트 및 다시 불러오기 -> 포트폴리오 목록 갱신 -> 편집창으로 이동
 
 import { useEffect, useRef, useState } from "react"
-import { type Portfolio } from "../../firebase/firebaseManager"
+import { createNewPortfolio, type Portfolio } from "../../firebase/firebaseManager"
 import "./MyPortfolio.css"
 import { Plus } from "lucide-react"
 import AlertTrash from "./AlertTrash"
+import AlertCreate from "./AlertCreate"
 
 type MyPortfolioProps = {
     uid: string
     portfolioData: Portfolio[]
+    setPortfolioData: (data: Portfolio[]) => void
     onMoveToTrash: (id: string) => void
     onRename: (index: number, newName: string) => void
 }
@@ -27,7 +29,7 @@ type contextMenuState = {
 
 const folderImgUrl = './folder.png'
 
-export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: MyPortfolioProps) {
+export default function MyPortfolio({ uid, portfolioData, setPortfolioData, onMoveToTrash, onRename }: MyPortfolioProps) {
 
     const [menu, setMenu] = useState<contextMenuState>({
         visible: false,
@@ -44,6 +46,10 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
 
     // 휴지통 이동 Alert
     const [showTrashAlert, setShowTrashAlert] = useState(false)
+
+    // 포트폴리오 생성
+    const [showCreateAlert, setShowCreateAlert] = useState(false)
+    const [newPortfolioTitle, setNewPortfolioTitle] = useState("")
 
     // 이름 변경시 input 전체 선택
     useEffect(() => {
@@ -113,6 +119,23 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
         // TODO: 액션에 따른 기능 구현
     }
 
+    // 포트폴리오 생성 버튼
+    const handleCreatePortfolio = () => {
+        setShowCreateAlert(true)
+        setNewPortfolioTitle("")
+    }
+
+    // 생성
+    const handleCreateConfirm = async () => {
+        if (newPortfolioTitle.trim() === "") return
+
+        // 파이어베이스 생성 함수
+        const created = await createNewPortfolio(uid, newPortfolioTitle.trim())
+        if (created === false) return
+        setPortfolioData(created)
+        setShowCreateAlert(false)
+    }
+
     return (
         <div
             className="portfolio_list">
@@ -141,7 +164,7 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
                         )}
                     </button>
                 ))}
-                <button className="create_button"><Plus style={{
+                <button className="create_button" onClick={() => setShowCreateAlert(true)}><Plus style={{
                     color: '#BA9E59'
                 }} /></button>
             </div>
@@ -160,6 +183,19 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
                     description={`'${menu.targetIndex ? portfolioData[menu.targetIndex].name : ''}' 을(를) 휴지통으로 이동하시겠습니까?`}
                 />)
             }
+
+            {showCreateAlert && (
+                <AlertCreate
+                    isOpen={showCreateAlert}
+                    onClose={() => setShowCreateAlert(false)}
+                    onConfirm={handleCreateConfirm}
+                    title="새 포트폴리오 만들기"
+                    description="포트폴리오 이름을 입력하세요."
+                    inputValue={newPortfolioTitle}
+                    onChangeInput={setNewPortfolioTitle}
+                    placeholder="포트폴리오 이름"
+                />
+            )}
 
             {menu.visible && (
                 <div

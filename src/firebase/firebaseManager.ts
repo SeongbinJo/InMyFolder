@@ -1,6 +1,7 @@
 import type { User } from "firebase/auth";
 import { doc, getDoc, setDoc } from "firebase/firestore";
 import { db } from "./firebaseConfig";
+import { userState } from "../state/userState";
 
 export type UserInfo = {
     uid: string;
@@ -188,6 +189,36 @@ export async function deletePortfolioPermanently(uid: string, index: number) {
         return true
     } catch (error) {
         console.error("Error deleting portfolio permanently: ", error);
+        return false
+    }
+}
+
+// 신규 포트폴리오 생성
+export async function createNewPortfolio(uid: string, portfolioName: string): Promise<Portfolio[] | false> {
+    try {
+        const docRef = doc(db, "users", uid)
+        const snap = await getDoc(docRef)
+
+        if (!snap.exists()) {
+            console.log("해당 유저의 문서가 존재하지 않습니다.")
+            return false
+        }
+
+        const data = snap.data()
+        const portfolioArray: Portfolio[] = data.portfolio
+        const newPortfolio: Portfolio = {
+            id: crypto.randomUUID(),
+            name: portfolioName,
+            createdAt: new Date(),
+            photos: [],
+            texts: [],
+            isDeleted: false,
+        }
+        portfolioArray.push(newPortfolio)
+        await setDoc(docRef, { portfolio: portfolioArray }, { merge: true })
+        return portfolioArray
+    } catch (error) {
+        console.error("Error creating new portfolio: ", error);
         return false
     }
 }

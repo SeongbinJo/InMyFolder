@@ -1,0 +1,82 @@
+.alert_background {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1500;
+}
+
+.alert_modal {
+  background-color: #ffffff;
+  border-radius: 15px;
+  padding: 20px 24px;
+  min-width: 260px;
+  max-width: 360px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.25);
+}
+
+.alert_title {
+  font-size: 16px;
+  font-weight: 600;
+  margin: 0 0 8px 0;
+  color: #333333;
+}
+
+.alert_description {
+  font-size: 13px;
+  color: #666666;
+  margin: 0 0 16px 0;
+  line-height: 1.4;
+}
+
+.alert_button_row {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+}
+
+.alert_button {
+  min-width: 72px;
+  height: 32px;
+  border-radius: 10px;
+  border: none;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.alert_button.cancel {
+  background-color: #ebebeb;
+  color: #555555;
+}
+
+.alert_button.cancel:hover {
+  background-color: #e3e3e3;
+}
+
+.alert_button.confirm {
+  background-color: #7d23b1;
+  color: #ffffff;
+}
+
+.alert_button.confirm:hover {
+  background-color: #651c8f;
+}
+
+.alert_input {
+  width: 100%;
+  margin-top: 8px;
+  margin-bottom: 16px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #d0c6dd;
+  font-size: 13px;
+  outline: none;
+  box-sizing: border-box;
+}
+
+.alert_input:focus {
+  border-color: #7d23b1;
+  box-shadow: 0 0 0 1px rgba(125, 35, 177, 0.2);
+}

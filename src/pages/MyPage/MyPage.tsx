@@ -94,6 +94,7 @@ export default function MyPage({ }) {
                 return <MyPortfolio
                     uid={currentUser?.uid ?? ''}
                     portfolioData={activePortfolios}
+                    setPortfolioData={setPortfolioData}
                     onMoveToTrash={handleMoveToTrash}
                     onRename={handleRenamePortfolio}
                 />
