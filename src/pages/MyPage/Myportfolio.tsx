@@ -147,18 +147,20 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
                 }} /></button>
             </div>
 
-            <AlertTrash
-                isOpen={showTrashAlert}
-                onClose={() => setShowTrashAlert(false)}
-                onConfirm={() => {
-                    if (menu.target) {
-                        onMoveToTrash(menu.target.id)
-                    }
-                    setShowTrashAlert(false)
-                }}
-                title={`휴지통으로 이동`}
-                description={`'${portfolioData[menu.targetIndex].name}' 을(를) 휴지통으로 이동하시겠습니까?`}
-            />
+            {showTrashAlert && menu.target && (
+                <AlertTrash
+                    isOpen={showTrashAlert}
+                    onClose={() => setShowTrashAlert(false)}
+                    onConfirm={() => {
+                        if (menu.target) {
+                            onMoveToTrash(menu.target.id)
+                        }
+                        setShowTrashAlert(false)
+                    }}
+                    title={`휴지통으로 이동`}
+                    description={`'${portfolioData[menu.targetIndex].name}' 을(를) 휴지통으로 이동하시겠습니까?`}
+                />)
+            }
 
             {menu.visible && (
                 <div
