@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react"
-import { fetchPortfolioData, movePortfolioToTrash, renamePortfolio, restorePortfolioFromTrash, type Portfolio } from "../../firebase/firebaseManager"
+import { deletePortfolioPermanently, fetchPortfolioData, movePortfolioToTrash, renamePortfolio, restorePortfolioFromTrash, type Portfolio } from "../../firebase/firebaseManager"
 import { userState } from "../../state/userState"
 import { auth } from "../../firebase/firebaseConfig"
 import { onAuthStateChanged } from "firebase/auth"
 import "./MyPage.css"
 import { Settings, LogOut } from "lucide-react"
-import MyPortfolio from "./Myportfolio"
+import MyPortfolio from "./MyPortfolio"
 import Trash from "./Trash"
 import Setting from "./Setting"
 
@@ -83,6 +83,9 @@ export default function MyPage({ }) {
         setPortfolioData(prev =>
             prev.filter(p => p.id !== id)
         )
+        
+        if (!currentUser) return
+        await deletePortfolioPermanently(currentUser.uid, portfolioData.findIndex(p => p.id === id))
     }
 
     const renderContent = () => {

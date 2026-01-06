@@ -166,3 +166,28 @@ export async function restorePortfolioFromTrash(uid: string, index: number) {
         return false
     }
 }
+
+// 휴지통 포트폴리오 영구 삭제
+export async function deletePortfolioPermanently(uid: string, index: number) {
+    try {
+        const docRef = doc(db, "users", uid)
+        const snap = await getDoc(docRef)
+
+        if (!snap.exists()) {
+            console.log("해당 유저의 문서가 존재하지 않습니다.")
+            return false
+        }
+
+        const data = snap.data()
+        const portfolioArray: Portfolio[] = data.portfolio
+
+        if (!portfolioArray[index]) return false
+
+        portfolioArray.splice(index, 1)
+        await setDoc(docRef, { portfolio: portfolioArray }, { merge: true })
+        return true
+    } catch (error) {
+        console.error("Error deleting portfolio permanently: ", error);
+        return false
+    }
+}

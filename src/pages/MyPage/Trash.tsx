@@ -93,7 +93,6 @@ export default function Trash({ portfolioData, onRestoreFromTrash, onDeletePerma
 
         if (alertMode === "restore") {
             onRestoreFromTrash(alertTarget.id)
-            console.log('복구복구')
         } else if (alertMode === "delete") {
             onDeletePermanently(alertTarget.id)
         }

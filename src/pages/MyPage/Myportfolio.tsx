@@ -107,7 +107,6 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
 
         if (action === "delete" && menu.targetIndex !== null) {
             setShowTrashAlert(true)
-            // onMoveToTrash(portfolioData[menu.targetIndex].id)
         }
         console.log(`메뉴 액션: ${action}`)
         setMenu({ ...menu, visible: false })
@@ -158,7 +157,7 @@ export default function MyPortfolio({ portfolioData, onMoveToTrash, onRename }: 
                         setShowTrashAlert(false)
                     }}
                     title={`휴지통으로 이동`}
-                    description={`'${portfolioData[menu.targetIndex].name}' 을(를) 휴지통으로 이동하시겠습니까?`}
+                    description={`'${menu.targetIndex ? portfolioData[menu.targetIndex].name : ''}' 을(를) 휴지통으로 이동하시겠습니까?`}
                 />)
             }
 
