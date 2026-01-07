@@ -51,6 +51,17 @@ export default function MyPortfolio({ uid, portfolioData, setPortfolioData, onMo
     const [showCreateAlert, setShowCreateAlert] = useState(false)
     const [newPortfolioTitle, setNewPortfolioTitle] = useState("")
 
+    // 좌클릭 & 더블클릭
+    const [selectedPortfolio, setSelectedPortfolio] = useState<Portfolio | null>(null)
+
+    const handleClickPortfolio = (portfolio: Portfolio) => {
+        setSelectedPortfolio(portfolio)
+    }
+
+    const handlerDoubleClickPortfolio = (portfoilio: Portfolio) => {
+        // 포트폴리오 열기 기능 추가..
+    }
+
     // 이름 변경시 input 전체 선택
     useEffect(() => {
         if (editingIndex !== null && inputRef.current) {
@@ -142,9 +153,11 @@ export default function MyPortfolio({ uid, portfolioData, setPortfolioData, onMo
             <div className="portfolio_grid">
                 {portfolioData.map((portfolio, index) => (
                     <button
-                        className="folder"
+                        className={`folder ${selectedPortfolio?.id === portfolio.id ? "selected" : ""}`}
                         key={index}
                         onContextMenu={(event) => handleContextMenu(event, portfolio, index)}
+                        onClick={() => handleClickPortfolio(portfolio)}
+                        onDoubleClick={() => handlerDoubleClickPortfolio(portfolio)}
                     >
                         <img src={folderImgUrl} alt="folder" />
                         {editingIndex === index ? (
@@ -180,7 +193,7 @@ export default function MyPortfolio({ uid, portfolioData, setPortfolioData, onMo
                         setShowTrashAlert(false)
                     }}
                     title={`휴지통으로 이동`}
-                    description={`'${menu.targetIndex ? portfolioData[menu.targetIndex].name : ''}' 을(를) 휴지통으로 이동하시겠습니까?`}
+                    description={`'${menu.target.name}' 을(를) 휴지통으로 이동하시겠습니까?`}
                 />)
             }
 

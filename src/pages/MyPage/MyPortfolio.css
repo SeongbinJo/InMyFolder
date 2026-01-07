@@ -24,6 +24,10 @@
     margin: 5px 10px 0 10px;
 }
 
+.folder.selected {
+  background-color: rgba(125, 35, 177, 0.12);
+}
+
 .portfolio_title {
     font-size: 12px;
     text-align: center;
