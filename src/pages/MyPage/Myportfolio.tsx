@@ -1,15 +1,10 @@
-// 1. MyPage가 켜질때 MyPortfolio가 기본으로 보이므로 fetchPortfolioData가 선 실행
-// 2. 가져온 포트폴리오 데이터 오른쪽(공간이 없다면 다음 행)에 포트폴리오를 추가할 수 있는 버튼 존재
-// 3. 우클릭 시 속성 창 오픈 -> 편집, 삭제, 공유(후순위) 옵션 구현
-// 4. 포트폴리오 추가 버튼 클릭 시 모달창 오픈 -> 포트폴리오 정보 입력 -> 
-// 저장 시 포트폴리오 데이터 업데이트 및 다시 불러오기 -> 포트폴리오 목록 갱신 -> 편집창으로 이동
-
 import { useEffect, useRef, useState } from "react"
 import { createNewPortfolio, type Portfolio } from "../../firebase/firebaseManager"
 import "./MyPortfolio.css"
 import { Plus } from "lucide-react"
 import AlertTrash from "./AlertTrash"
 import AlertCreate from "./AlertCreate"
+import { useNavigate } from "react-router-dom"
 
 type MyPortfolioProps = {
     uid: string
@@ -30,6 +25,8 @@ type contextMenuState = {
 const folderImgUrl = './folder.png'
 
 export default function MyPortfolio({ uid, portfolioData, setPortfolioData, onMoveToTrash, onRename }: MyPortfolioProps) {
+
+    const navigate = useNavigate()
 
     const [menu, setMenu] = useState<contextMenuState>({
         visible: false,
@@ -59,7 +56,7 @@ export default function MyPortfolio({ uid, portfolioData, setPortfolioData, onMo
     }
 
     const handlerDoubleClickPortfolio = (portfoilio: Portfolio) => {
-        // 포트폴리오 열기 기능 추가..
+        openPortfolio(portfoilio)
     }
 
     // 이름 변경시 input 전체 선택
@@ -111,10 +108,15 @@ export default function MyPortfolio({ uid, portfolioData, setPortfolioData, onMo
         setEditingName("")
     }
 
+    // 열기 navigate
+    const openPortfolio = (portfolio: Portfolio) => {
+        navigate(`/portfolio/${portfolio.id}`)
+    }
+
     // 우클릭 메뉴 기능 핸들러
     const handleMenuClick = (action: string) => {
-        if (action === "open" && menu.targetIndex !== null) {
-            console.log(`포트폴리오 열기: ${portfolioData[menu.targetIndex].name}`)
+        if (action === "open" && menu.target !== null) {
+            openPortfolio(menu.target)
         }
 
         if (action === "rename" && menu.targetIndex !== null && menu.target) {
@@ -128,12 +130,6 @@ export default function MyPortfolio({ uid, portfolioData, setPortfolioData, onMo
         console.log(`메뉴 액션: ${action}`)
         setMenu({ ...menu, visible: false })
         // TODO: 액션에 따른 기능 구현
-    }
-
-    // 포트폴리오 생성 버튼
-    const handleCreatePortfolio = () => {
-        setShowCreateAlert(true)
-        setNewPortfolioTitle("")
     }
 
     // 생성
