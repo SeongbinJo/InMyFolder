@@ -1,0 +1,23 @@
+.portfolio {
+    display: flex;
+    flex-direction: column;
+    background-color: red;
+    height: 100%;
+}
+
+.navigation {
+    display: flex;
+    flex-direction: row;
+    background-color: #731BA5;
+    height: 40px;
+    align-items: center;
+    gap: 20px;
+    padding: 0 10px 0 10px;
+}
+
+.contents {
+    display: flex;
+    flex-direction: row;
+    background-color: blue;
+    height: 100%;
+}

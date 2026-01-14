@@ -1,0 +1,27 @@
+.side-menu {
+    width: 250px;
+    height: 100%;
+    background-color: #5D1089;
+}
+
+.title {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+    padding-top: 18px;
+}
+
+.side-menu p {
+    margin: 1px 0 0 0;
+    color: white;
+    padding: 0 0 0 15px;
+}
+
+.line {
+    height: 1px;
+    width: 100%;
+    background-color: rgba(255, 255, 255, 0.226);
+    margin: 15px 0 15px 0;
+}
+

@@ -1,0 +1,48 @@
+.bar {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: space-between;
+}
+
+.left-menu {
+    display: flex;
+    flex-direction: row;
+    gap: 15px;
+}
+
+.Vline {
+    height: 25px;
+    width: 1px;
+    background-color: rgba(255, 255, 255, 0.226);
+    margin: 10px 0 10px 0;
+}
+
+button {
+    background-color: transparent;
+    border-width: 0;
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+.right-menu {
+    display: flex;
+    flex-direction: row;   
+}
+
+.profile-menu {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.profile-menu button {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.profile-menu p {
+    margin: 2px 0 0 0;
+}
