@@ -1,8 +1,9 @@
 .portfolio {
     display: flex;
     flex-direction: column;
-    background-color: red;
     height: 100%;
+    width: 100%;
+    overflow: hidden;
 }
 
 .navigation {
@@ -18,6 +19,10 @@
 .contents {
     display: flex;
     flex-direction: row;
-    background-color: blue;
     height: 100%;
+    width: 100%;
+}
+
+.main_portfolio {
+    flex: 1;
 }

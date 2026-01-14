@@ -1,7 +1,11 @@
+import "./Workspace.css"
+
 export default function Workspace() {
     return (
-        <div>
-            Workspace.tsx
+        <div className="workspace">
+            <div className="paper">
+
+            </div>
         </div>
     )
 }
